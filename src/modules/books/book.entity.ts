@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseEntity } from '../../core/config/entity/base.entity';
+import { BaseEntity } from '../../core/entity/base.entity';
 
 @Entity('books')
 export class Book extends BaseEntity {
