@@ -6,8 +6,8 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateBookDto } from './create-book.dto';
+// import { PartialType } from '@nestjs/mapped-types';
+// import { CreateBookDto } from './create-book.dto';
 
 export class UpdateBookDto {
   @IsString()
