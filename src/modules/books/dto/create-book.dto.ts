@@ -6,7 +6,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 
 export class CreateBookDto {
   @IsString()
@@ -16,10 +16,11 @@ export class CreateBookDto {
   @IsInt()
   @Min(5)
   @Max(120)
-  @Transform((params) => {
-    console.log(params.value);
-    return Number(params.value);
-  })
+  @Type(() => Number)
+  // @Transform((params) => {
+  //   console.log(params.value);
+  //   return Number(params.value);
+  // })
   ageRestriction: number;
 
   @IsString()
