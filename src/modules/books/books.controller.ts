@@ -9,6 +9,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
+import { UpdateBookDto } from './dto/update-book.dto';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Controller('books')
 export class BooksController {
@@ -34,16 +36,14 @@ export class BooksController {
 
   // Создать новую книгу
   @Post()
-  @HttpCode(201)
-  async createBook(@Body() bookDto: any) {
-    return this.booksService.createBook(bookDto);
+  async createBook(@Body() bookDto: CreateBookDto) {
     // необходимо вызвать соответствующий метод сервиса и вернуть результат
-    //const result = await this.booksService.someMethod();
+    await this.booksService.createBook(bookDto);
   }
 
   // Обновить информацию о книге
   @Put(':id')
-  async updateBook(@Param('id') id: number, @Body() bookDto: any) {
+  async updateBook(@Param('id') id: number, @Body() bookDto: UpdateBookDto) {
     // необходимо вызвать соответствующий метод сервиса и вернуть результат
     //const result = await this.booksService.someMethod();
   }
