@@ -17,7 +17,7 @@ export class CreateBookDto {
   @Min(5)
   @Max(120)
   @Type(() => Number)
-  // @Transform((params) => {
+  // TODO @Transform((params) => {
   //   console.log(params.value);
   //   return Number(params.value);
   // })
