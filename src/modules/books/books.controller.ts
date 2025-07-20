@@ -36,6 +36,7 @@ export class BooksController {
 
   // Создать новую книгу
   @Post()
+  @HttpCode(201)
   async createBook(@Body() bookDto: CreateBookDto) {
     // необходимо вызвать соответствующий метод сервиса и вернуть результат
     await this.booksService.createBook(bookDto);
