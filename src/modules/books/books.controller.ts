@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -30,6 +31,8 @@ export class BooksController {
 
   // Получить книгу по ID
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  // @UseGuards(JwtOptionalGuard)
   async getBookById(@Param('id') id: number) {
     return this.booksService.getBookById(id);
     // необходимо вызвать соответствующий метод сервиса и вернуть результат
@@ -39,7 +42,7 @@ export class BooksController {
 
   // Создать новую книгу
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtAuthGuard)
   async createBook(@Body() bookDto: CreateBookDto, @Request() req: any) {
     console.log(req.userId, 'userId');
@@ -49,15 +52,25 @@ export class BooksController {
 
   // Обновить информацию о книге
   @Put(':id')
-  async updateBook(@Param('id') id: number, @Body() bookDto: UpdateBookDto) {
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  async updateBook(
+    @Param('id') id: number,
+    @Body() bookDto: UpdateBookDto,
+    @Request() req: any,
+  ) {
     // необходимо вызвать соответствующий метод сервиса и вернуть результат
     //const result = await this.booksService.someMethod();
+    await this.booksService.updateBook(id, bookDto, req.user.userId);
   }
 
   // Удалить книгу
   @Delete(':id')
-  async deleteBook(@Param('id') id: number) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  async deleteBook(@Param('id') id: number, @Request() req: any) {
     // необходимо вызвать соответствующий метод сервиса и вернуть результат
     //const result = await this.booksService.someMethod();
+    await this.booksService.deleteBook(id, req.user.userId);
   }
 }

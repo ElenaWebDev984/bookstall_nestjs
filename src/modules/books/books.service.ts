@@ -23,17 +23,42 @@ export class BooksService {
   }
 
   // Создать новую книгу
-  async createBook(dto: CreateBookDto, userId: number): Promise<void> {
+  async createBook(dto: CreateBookDto, userId: number): Promise<Book> {
     const user = await this.userRepo.findByIdOrNotFoundFail(userId);
-
     const book = Book.createBook(dto, userId, user.age);
-
     await this.booksRepository.save(book);
+    return book;
   }
 
-  async updateBook(dto: UpdateBookDto, userId: number, bookId: number) {
+  // Обновить информацию о книге
+  async updateBook(
+    bookId: number,
+    dto: UpdateBookDto,
+    userId: number,
+  ): Promise<Book> {
     const book = await this.booksRepository.findOneOrNotFoundFail(bookId);
 
+    if (book.ownerId !== userId) {
+      throw new ForbiddenException(
+        'You can only update books that you have created',
+      );
+    }
+
     book.updateBook(dto, userId);
+    await this.booksRepository.save(book);
+    return book;
+  }
+
+  // Удалить книгу
+  async deleteBook(bookId: number, userId: number): Promise<void> {
+    const book = await this.booksRepository.findOneOrNotFoundFail(bookId);
+
+    if (book.ownerId !== userId) {
+      throw new ForbiddenException(
+        'You can only delete books that you have created',
+      );
+    }
+
+    await this.booksRepository.remove(book.id);
   }
 }
