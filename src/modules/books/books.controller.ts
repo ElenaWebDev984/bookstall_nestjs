@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
@@ -32,9 +33,9 @@ export class BooksController {
   // Получить книгу по ID
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  // @UseGuards(JwtOptionalGuard)
-  async getBookById(@Param('id') id: number) {
-    return this.booksService.getBookById(id);
+  async getBookById(@Param('id') id: number, @Req() req: any) {
+    const userId = req.user?.userId; // TODO Будет undefined если пользователь не авторизован
+    return this.booksService.getBookById(id, userId);
     // необходимо вызвать соответствующий метод сервиса и вернуть результат
     //const result = await this.booksService.someMethod();
     //return result

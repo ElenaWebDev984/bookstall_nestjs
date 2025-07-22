@@ -34,6 +34,7 @@ export class Book extends BaseEntity {
 
     return book;
   }
+
   updateBook(dto: UpdateBookDto, userId: number) {
     // TODO logic
     if (this.ownerId !== userId) {
@@ -41,5 +42,23 @@ export class Book extends BaseEntity {
     }
 
     this.title = dto.title ?? this.title;
+  }
+
+  deleteBook(userId: number) {
+    if (this.ownerId !== userId) {
+      throw new ForbiddenException('Only book owner can delete it');
+    }
+    // TODO HW
+    return true;
+  }
+
+  static canAccessBook(book: Book, userId?: number, userAge?: number): boolean {
+    // TODO HW Проверка возрастного ограничения
+    if (book.ageRestriction >= 18) {
+      if (!userId || !userAge || userAge < 18) {
+        return false;
+      }
+    }
+    return true;
   }
 }

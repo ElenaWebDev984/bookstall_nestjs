@@ -18,8 +18,22 @@ export class BooksService {
   }
 
   // Получить книгу по ID
-  async getBookById(id: number): Promise<Book> {
-    return this.booksRepository.findOneOrNotFoundFail(id);
+  async getBookById(id: number, userId?: number): Promise<Book> {
+    const book = await this.booksRepository.findOneOrNotFoundFail(id);
+
+    // TODO HW Если книга 18+ и пользователь не авторизован или младше 18
+    if (book.ageRestriction >= 18) {
+      if (!userId) {
+        throw new ForbiddenException('This book requires authentication');
+      }
+
+      const user = await this.userRepo.findByIdOrNotFoundFail(userId);
+      if (user.age < 18) {
+        throw new ForbiddenException('You are too young to view this book');
+      }
+    }
+
+    return book;
   }
 
   // Создать новую книгу
